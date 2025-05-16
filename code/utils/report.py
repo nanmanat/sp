@@ -7,7 +7,7 @@ Created on Wed Oct 10 17:04:18 2018
 
 import numpy as np
 from sklearn.metrics import accuracy_score
-from .metrics import sensitivity_specificity_support, specificity_score, sensitivity_score
+from metrics import sensitivity_specificity_support, specificity_score, sensitivity_score, precision_recall_fscore_support
 
 
 def creat_class_name(classNumber):
@@ -22,24 +22,28 @@ def report_precision_se_sp_yi(y_predicitions,  groundture):
     Result = []
     SE, SP, _ = sensitivity_specificity_support(groundture, y_predicitions)
     YI = SE + SP - 1
+    # Calculate precision, recall, and f1-score
+    precision, recall, f1, _ = precision_recall_fscore_support(groundture, y_predicitions, average=None)
     for i in range(class_list1.shape[0]):
         local_1 = [k for k in range(len(y_predicitions)) if y_predicitions[k]==class_list1[i]]
         y_pred1 = [y_predicitions[k] for k in local_1]
         y_true1 = [groundture[k] for k in local_1]
         pre = accuracy_score(y_true1,y_pred1)
-        Result.append([pre,SE[i],SP[i],YI[i]])
+        Result.append([pre,SE[i],SP[i],YI[i],recall[i],f1[i]])
     AVE_ACC = accuracy_score(groundture,y_predicitions)
     AVE_Pre = np.mean(Result,0)[0]
     AVE_SE = sensitivity_score(groundture,y_predicitions,average='macro')
     AVE_SP = specificity_score(groundture,y_predicitions,average='macro')
     AVE_YI = AVE_SE+AVE_SP-1
-    Result.append([AVE_Pre,AVE_SE,AVE_SP,AVE_YI])
+    # Calculate average recall and f1-score
+    _, AVE_Recall, AVE_F1, _ = precision_recall_fscore_support(groundture, y_predicitions, average='macro')
+    Result.append([AVE_Pre,AVE_SE,AVE_SP,AVE_YI,AVE_Recall,AVE_F1])
     target_names = creat_class_name(len(Result)-1)
     last_line_heading = 'avg / total'
     name_width = max(len(cn) for cn in target_names)
     width = max(name_width, len(last_line_heading), 3)
     target_names.append(last_line_heading)
-    headers = ["Precision", "SE", "SP", "YI"]
+    headers = ["Precision", "SE", "SP", "YI", "Recall", "F1-score"]
     fmt = '%% %ds' % width  # first column: class name
     fmt += " "
     fmt += ' '.join(['% 9s' for _ in headers])
@@ -114,4 +118,3 @@ def report_mae_mse(y_ture, y_predicitions,classification):
     report += tmp
     # print(report)
     return Result, MAE, MSE, report
-
