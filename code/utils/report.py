@@ -6,9 +6,43 @@ Created on Wed Oct 10 17:04:18 2018
 """
 
 import numpy as np
-from sklearn.metrics import accuracy_score
-from metrics import sensitivity_specificity_support, specificity_score, sensitivity_score, precision_recall_fscore_support
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
+def sensitivity_score(y_true, y_pred, average='binary'):
+    """Calculate sensitivity (recall) score."""
+    return precision_recall_fscore_support(y_true, y_pred, average=average)[1]
+
+def specificity_score(y_true, y_pred, average='binary'):
+    """Calculate specificity score."""
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    
+    classes = np.unique(y_true)
+    specificity_scores = []
+    
+    for cls in classes:
+        # Convert to binary classification problem
+        y_true_bin = (y_true == cls).astype(int)
+        y_pred_bin = (y_pred == cls).astype(int)
+        
+        # Calculate true negatives and false positives
+        tn = np.sum((y_true_bin == 0) & (y_pred_bin == 0))
+        fp = np.sum((y_true_bin == 0) & (y_pred_bin == 1))
+        
+        # Calculate specificity
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
+        specificity_scores.append(specificity)
+    
+    if average == 'macro':
+        return np.mean(specificity_scores)
+    return specificity_scores
+
+def sensitivity_specificity_support(y_true, y_pred):
+    """Calculate sensitivity and specificity scores."""
+    sensitivity = sensitivity_score(y_true, y_pred, average=None)
+    specificity = specificity_score(y_true, y_pred, average=None)
+    support = np.bincount(y_true.astype(int))
+    return sensitivity, specificity, support
 
 def creat_class_name(classNumber):
     number = []
