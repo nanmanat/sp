@@ -10,13 +10,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms, models
 from torch.utils.data import DataLoader
-from dataset import dataset_processing
+from code.dataset import dataset_processing
 from timeit import default_timer as timer
-from utils.report import report_precision_se_sp_yi, report_mae_mse
-from utils.utils import Logger, AverageMeter, time_to_str, weights_init
-from utils.genLD import genLD
+from code.utils.report import report_precision_se_sp_yi, report_mae_mse
+from code.utils.utils import Logger, AverageMeter, time_to_str, weights_init
+from code.utils.genLD import genLD
 import torch.backends.cudnn as cudnn
-from transforms.affine_transforms import *
+from code.transforms.affine_transforms import *
 import time
 import warnings
 
@@ -32,7 +32,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import argparse
 import timm
 
-from utils.run_logger import CSVRunLogger
+from code.utils.run_logger import CSVRunLogger
 
 # Import timm for additional models
 try:
@@ -517,14 +517,32 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
             log.write(f"Grad-CAM visualizations saved to {best_save_dir} and {last_save_dir}\n")
 
 
-def run_training(model_name: str, cross_val_lists=None):
+def run_training(model_name: str, cross_val_lists=None, batch_size=None, batch_size_test=None, 
+               lr=None, num_workers=None, data_path=None):
     """Run full training across specified folds with CSV logging and optional GitHub upload."""
     if cross_val_lists is None:
         cross_val_lists = ['0', '1', '2', '3', '4']
 
+    # Set global variables if provided
+    global BATCH_SIZE, BATCH_SIZE_TEST, LR, NUM_WORKERS, DATA_PATH
+    if batch_size is not None:
+        BATCH_SIZE = batch_size
+    if batch_size_test is not None:
+        BATCH_SIZE_TEST = batch_size_test
+    if lr is not None:
+        LR = lr
+    if num_workers is not None:
+        NUM_WORKERS = num_workers
+    if data_path is not None:
+        DATA_PATH = data_path
+
     # Initialize CSV logger (one CSV per run)
     csv_logger = CSVRunLogger(logs_dir='./logs', filename_prefix=f'{model_name}')
     log.write(f"CSV logging to: {csv_logger.path}\n")
+
+    # Log configuration
+    log.write(f"Configuration: Model={model_name}, Batch Size={BATCH_SIZE}, LR={LR}, Workers={NUM_WORKERS}\n")
+    log.write(f"Data Path: {DATA_PATH}\n")
 
     try:
         for cross_val_index in cross_val_lists:
