@@ -173,7 +173,7 @@ class ExperimentGUI:
 
         # Data path
         ttk.Label(config_frame, text="Data Path:").grid(row=5, column=0, sticky=tk.W, pady=5)
-        self.data_path_var = tk.StringVar(value="./Classification/JPEGImages")
+        self.data_path_var = tk.StringVar(value="./code/Classification/JPEGImages")
         data_path_entry = ttk.Entry(config_frame, textvariable=self.data_path_var, width=40)
         data_path_entry.grid(row=5, column=1, sticky=tk.W, pady=5)
         ttk.Button(config_frame, text="Browse...", command=self._browse_data_path).grid(row=5, column=2, sticky=tk.W, pady=5)
