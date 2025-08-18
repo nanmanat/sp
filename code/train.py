@@ -32,6 +32,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import argparse
 import timm
 
+from utils.run_logger import CSVRunLogger
+
 # Import timm for additional models
 try:
     import timm
@@ -275,7 +277,7 @@ def criterion(lesions_num):
         return 3
 
 
-def trainval_test(cross_val_index, sigma, lam, model_name):
+def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLogger = None):
     TRAIN_FILE = './Classification/NNEW_trainval_' + cross_val_index + '.txt'
     TEST_FILE = './Classification/NNEW_test_' + cross_val_index + '.txt'
 
@@ -401,6 +403,23 @@ def trainval_test(cross_val_index, sigma, lam, model_name):
                         test_acc)
                 log.write(message)
 
+                # CSV logging per epoch
+                if csv_logger is not None:
+                    try:
+                        current_lr = max([g.get('lr', 0.0) for g in optimizer.param_groups]) if optimizer.param_groups else LR
+                    except Exception:
+                        current_lr = LR
+                    csv_logger.log_row({
+                        'model': model_name,
+                        'fold': cross_val_index,
+                        'epoch': epoch,
+                        'train_loss': float(losses.avg),
+                        'val_loss': float(test_loss_avg.avg),
+                        'val_acc': float(test_acc.item() if hasattr(test_acc, 'item') else float(test_acc)),
+                        'lr': float(current_lr),
+                        'elapsed': time_to_str((timer() - start), 'min')
+                    })
+
                 # Convert lists to numpy arrays for report functions
                 y_true_np = np.array(y_true_list)
                 y_pred_np = np.array(y_pred_list)
@@ -498,6 +517,31 @@ def trainval_test(cross_val_index, sigma, lam, model_name):
             log.write(f"Grad-CAM visualizations saved to {best_save_dir} and {last_save_dir}\n")
 
 
+def run_training(model_name: str, cross_val_lists=None):
+    """Run full training across specified folds with CSV logging and optional GitHub upload."""
+    if cross_val_lists is None:
+        cross_val_lists = ['0', '1', '2', '3', '4']
+
+    # Initialize CSV logger (one CSV per run)
+    csv_logger = CSVRunLogger(logs_dir='./logs', filename_prefix=f'{model_name}')
+    log.write(f"CSV logging to: {csv_logger.path}\n")
+
+    try:
+        for cross_val_index in cross_val_lists:
+            log.write('\n\ncross_val_index: ' + cross_val_index + '\n')
+            log.write(f'Training model: {model_name}\n\n')
+            trainval_test(cross_val_index, sigma=30 * 0.1, lam=6 * 0.1, model_name=model_name, csv_logger=csv_logger)
+    finally:
+        csv_logger.close()
+
+    # Try to upload CSV log to GitHub if possible
+    pushed = csv_logger.try_git_upload(commit_message=f"Training logs for {model_name}")
+    if pushed:
+        log.write("CSV log uploaded to GitHub successfully.\n")
+    else:
+        log.write("CSV log upload to GitHub skipped or failed.\n")
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train different models on the dataset.')
     parser.add_argument('--model', type=str, default='resnet50',
@@ -509,8 +553,4 @@ if __name__ == '__main__':
                         help='Name of the model to train')
     args = parser.parse_args()
 
-    cross_val_lists = ['0', '1', '2', '3', '4']
-    for cross_val_index in cross_val_lists:
-        log.write('\n\ncross_val_index: ' + cross_val_index + '\n')
-        log.write(f'Training model: {args.model}\n\n')
-        trainval_test(cross_val_index, sigma=30 * 0.1, lam=6 * 0.1, model_name=args.model)
+    run_training(args.model)
