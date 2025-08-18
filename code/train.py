@@ -250,12 +250,12 @@ BATCH_SIZE_TEST = 20
 LR = 0.001
 NUM_WORKERS = 12
 NUM_CLASSES = 4
-LOG_FILE_NAME = './logs/log_' + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + '.log'
+LOG_FILE_NAME = './code/logs/log_' + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()) + '.log'
 lr_steps = [30, 60, 90, 120]
 
 np.random.seed(42)
 
-DATA_PATH = './Classification/JPEGImages'
+DATA_PATH = './code/Classification/JPEGImages'
 
 # Ensure the logs directory exists
 log_dir = os.path.dirname(LOG_FILE_NAME)
@@ -278,11 +278,11 @@ def criterion(lesions_num):
 
 
 def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLogger = None):
-    TRAIN_FILE = './Classification/NNEW_trainval_' + cross_val_index + '.txt'
-    TEST_FILE = './Classification/NNEW_test_' + cross_val_index + '.txt'
+    TRAIN_FILE = './code/Classification/NNEW_trainval_' + cross_val_index + '.txt'
+    TEST_FILE = './code/Classification/NNEW_test_' + cross_val_index + '.txt'
 
     # Create directories for saving models
-    model_save_dir = f'./saved_models/{model_name}_fold{cross_val_index}'
+    model_save_dir = f'./code/saved_models/{model_name}_fold{cross_val_index}'
     os.makedirs(model_save_dir, exist_ok=True)
 
     normalize = transforms.Normalize(mean=[0.45815152, 0.361242, 0.29348266],
@@ -468,8 +468,8 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
                 random_indices = all_indices
 
             # Create directories for visualizations
-            best_save_dir = f'./gradcam_visualizations/{model_name}_fold{cross_val_index}_best'
-            last_save_dir = f'./gradcam_visualizations/{model_name}_fold{cross_val_index}_last'
+            best_save_dir = f'./code/gradcam_visualizations/{model_name}_fold{cross_val_index}_best'
+            last_save_dir = f'./code/gradcam_visualizations/{model_name}_fold{cross_val_index}_last'
             os.makedirs(best_save_dir, exist_ok=True)
             os.makedirs(last_save_dir, exist_ok=True)
 
@@ -537,7 +537,7 @@ def run_training(model_name: str, cross_val_lists=None, batch_size=None, batch_s
         DATA_PATH = data_path
 
     # Initialize CSV logger (one CSV per run)
-    csv_logger = CSVRunLogger(logs_dir='./logs', filename_prefix=f'{model_name}')
+    csv_logger = CSVRunLogger(logs_dir='./code/logs', filename_prefix=f'{model_name}')
     log.write(f"CSV logging to: {csv_logger.path}\n")
 
     # Log configuration
