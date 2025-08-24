@@ -411,6 +411,17 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
                         test_acc)
                 log.write(message)
 
+                # Convert lists to numpy arrays for report functions
+                y_true_np = np.array(y_true_list)
+                y_pred_np = np.array(y_pred_list)
+
+                result_metrics, _, pre_se_sp_yi_report = report_precision_se_sp_yi(y_pred_np, y_true_np)
+                log.write(str(pre_se_sp_yi_report) + '\n')
+
+                # Extract average metrics (last row of result_metrics)
+                avg_metrics = result_metrics[-1]
+                avg_precision, avg_se, avg_sp, avg_yi, avg_recall, avg_f1 = avg_metrics
+
                 # CSV logging per epoch
                 if csv_logger is not None:
                     try:
@@ -424,16 +435,12 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
                         'train_loss': float(losses.avg),
                         'val_loss': float(test_loss_avg.avg),
                         'val_acc': float(test_acc.item() if hasattr(test_acc, 'item') else float(test_acc)),
+                        'precision': float(avg_precision),
+                        'recall': float(avg_recall),
+                        'f1_score': float(avg_f1),
                         'lr': float(current_lr),
                         'elapsed': time_to_str((timer() - start), 'min')
                     })
-
-                # Convert lists to numpy arrays for report functions
-                y_true_np = np.array(y_true_list)
-                y_pred_np = np.array(y_pred_list)
-
-                _, _, pre_se_sp_yi_report = report_precision_se_sp_yi(y_pred_np, y_true_np)
-                log.write(str(pre_se_sp_yi_report) + '\n')
 
                 # Save the best model if current accuracy is better than the best so far
                 if test_acc > best_acc:
