@@ -277,7 +277,7 @@ def criterion(lesions_num):
         return 3
 
 
-def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLogger = None):
+def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLogger = None, early_stop_patience=None, improvement_threshold=0.015):
     TRAIN_FILE = './code/Classification/NNEW_trainval_' + cross_val_index + '.txt'
     TEST_FILE = './code/Classification/NNEW_test_' + cross_val_index + '.txt'
 
@@ -346,7 +346,15 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
     best_model_state = None
     best_acc = 0.0
 
+    # Early stopping variables
+    best_val_loss = float('inf')
+    early_stop_counter = 0
+    early_stop = False
+
     for epoch in range(lr_steps[-1]):
+        if early_stop:
+            log.write(f"Early stopping triggered after {epoch} epochs due to small improvement (≤{improvement_threshold}) in validation loss for {early_stop_patience} epochs\n")
+            break
         if epoch in lr_steps:
             adjust_learning_rate_new(optimizer, 0.5)
 
@@ -440,6 +448,35 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
                     torch.save(best_model_state, best_model_path)
                     log.write(f"Saved new best model with accuracy: {test_acc:.4f}\n")
 
+                # Early stopping check based on validation loss improvement
+                if early_stop_patience is not None:
+                    current_val_loss = test_loss_avg.avg
+                    if current_val_loss < best_val_loss:
+                        # Calculate improvement
+                        improvement = best_val_loss - current_val_loss
+                        log.write(f"Validation loss improved from {best_val_loss:.4f} to {current_val_loss:.4f} (improvement: {improvement:.4f})\n")
+
+                        # Check if improvement is small (≤{improvement_threshold})
+                        if improvement <= improvement_threshold:
+                            early_stop_counter += 1
+                            log.write(f"Small improvement (≤{improvement_threshold}). Counter: {early_stop_counter}/{early_stop_patience}\n")
+                            if early_stop_counter >= early_stop_patience:
+                                early_stop = True
+                                log.write(f"Early stopping triggered after {early_stop_patience} epochs with small improvement (≤{improvement_threshold})\n")
+                        else:
+                            # Significant improvement, reset counter
+                            early_stop_counter = 0
+
+                        # Update best validation loss
+                        best_val_loss = current_val_loss
+                    else:
+                        # No improvement at all
+                        early_stop_counter += 1
+                        log.write(f"Validation loss did not improve. Counter: {early_stop_counter}/{early_stop_patience}\n")
+                        if early_stop_counter >= early_stop_patience:
+                            early_stop = True
+                            log.write(f"Early stopping triggered. Best validation loss: {best_val_loss:.4f}\n")
+
         if epoch == 119:  # Last epoch
             # Save the last model
             last_model_state = {
@@ -518,7 +555,7 @@ def trainval_test(cross_val_index, sigma, lam, model_name, csv_logger: CSVRunLog
 
 
 def run_training(model_name: str, cross_val_lists=None, batch_size=None, batch_size_test=None, 
-               lr=None, num_workers=None, data_path=None):
+               lr=None, num_workers=None, data_path=None, early_stop_patience=None, improvement_threshold=0.015):
     """Run full training across specified folds with CSV logging and optional GitHub upload."""
     if cross_val_lists is None:
         cross_val_lists = ['0', '1', '2', '3', '4']
@@ -548,7 +585,7 @@ def run_training(model_name: str, cross_val_lists=None, batch_size=None, batch_s
         for cross_val_index in cross_val_lists:
             log.write('\n\ncross_val_index: ' + cross_val_index + '\n')
             log.write(f'Training model: {model_name}\n\n')
-            trainval_test(cross_val_index, sigma=30 * 0.1, lam=6 * 0.1, model_name=model_name, csv_logger=csv_logger)
+            trainval_test(cross_val_index, sigma=30 * 0.1, lam=6 * 0.1, model_name=model_name, csv_logger=csv_logger, early_stop_patience=early_stop_patience, improvement_threshold=improvement_threshold)
     finally:
         csv_logger.close()
 
