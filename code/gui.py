@@ -64,13 +64,17 @@ class ExperimentQueue:
                 data_path = self.current_experiment.get('data_path', None)
 
                 # Call the training function with all parameters
+                early_stop_patience = self.current_experiment.get('early_stop_patience', None)
+                improvement_threshold = self.current_experiment.get('improvement_threshold', 0.015)
                 run_training(
                     model_name=model_name, 
                     cross_val_lists=cross_val_lists,
                     batch_size=batch_size,
                     lr=lr,
                     num_workers=num_workers,
-                    data_path=data_path
+                    data_path=data_path,
+                    early_stop_patience=early_stop_patience,
+                    improvement_threshold=improvement_threshold
                 )
 
                 if callback:
@@ -178,8 +182,20 @@ class ExperimentGUI:
         data_path_entry.grid(row=5, column=1, sticky=tk.W, pady=5)
         ttk.Button(config_frame, text="Browse...", command=self._browse_data_path).grid(row=5, column=2, sticky=tk.W, pady=5)
 
+        # Early stopping patience
+        ttk.Label(config_frame, text="Early Stop Patience:").grid(row=6, column=0, sticky=tk.W, pady=5)
+        self.early_stop_var = tk.StringVar(value="0")
+        ttk.Entry(config_frame, textvariable=self.early_stop_var, width=10).grid(row=6, column=1, sticky=tk.W, pady=5)
+        ttk.Label(config_frame, text="(0 to disable)").grid(row=6, column=2, sticky=tk.W, pady=5)
+
+        # Improvement threshold
+        ttk.Label(config_frame, text="Improvement Threshold:").grid(row=7, column=0, sticky=tk.W, pady=5)
+        self.improvement_threshold_var = tk.StringVar(value="0.015")
+        ttk.Entry(config_frame, textvariable=self.improvement_threshold_var, width=10).grid(row=7, column=1, sticky=tk.W, pady=5)
+        ttk.Label(config_frame, text="(threshold for early stopping)").grid(row=7, column=2, sticky=tk.W, pady=5)
+
         # Add to queue button
-        ttk.Button(config_frame, text="Add to Queue", command=self._add_to_queue).grid(row=6, column=0, columnspan=3, pady=20)
+        ttk.Button(config_frame, text="Add to Queue", command=self._add_to_queue).grid(row=8, column=0, columnspan=3, pady=20)
 
     def _setup_queue_tab(self):
         """Setup the queue tab"""
@@ -268,13 +284,16 @@ class ExperimentGUI:
             return
 
         # Create experiment config
+        early_stop = int(self.early_stop_var.get())
         config = {
             'model': self.model_var.get(),
             'folds': selected_folds,
             'batch_size': int(self.batch_size_var.get()),
             'lr': float(self.lr_var.get()),
             'workers': int(self.workers_var.get()),
-            'data_path': self.data_path_var.get()
+            'data_path': self.data_path_var.get(),
+            'early_stop_patience': early_stop if early_stop > 0 else None,
+            'improvement_threshold': float(self.improvement_threshold_var.get())
         }
 
         # Add to queue
