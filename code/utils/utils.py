@@ -30,7 +30,7 @@ class Logger(object):
 
     def open(self, file, mode=None):
         if mode is None: mode ='w'
-        self.file = open(file, mode)
+        self.file = open(file, mode, encoding='utf-8')
 
     def write(self, message, is_terminal=1, is_file=1 ):
         if '\r' in message: is_file=0

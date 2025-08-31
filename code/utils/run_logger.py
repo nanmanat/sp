@@ -15,7 +15,7 @@ class CSVRunLogger:
         os.makedirs(logs_dir, exist_ok=True)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.file_path = os.path.join(logs_dir, f"{filename_prefix}_{timestamp}.csv")
-        self._file = open(self.file_path, mode="w", newline="")
+        self._file = open(self.file_path, mode="w", newline="", encoding="utf-8")
         self._writer: Optional[csv.DictWriter] = None
         self._fieldnames: Optional[List[str]] = None
 
