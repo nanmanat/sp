@@ -1,0 +1,30 @@
+2025-09-04 19:16:13,043 - INFO - 🚀 Starting trigger publisher server on localhost:8766
+2025-09-04 19:16:13,080 - INFO - server listening on 127.0.0.1:8766
+2025-09-04 19:16:13,080 - INFO - server listening on [::1]:8766
+2025-09-04 19:16:13,080 - INFO - 📡 Trigger publisher listening on ws://localhost:8766
+2025-09-04 19:16:13,080 - INFO - 🔔 Waiting for training clients to subscribe...
+2025-09-04 19:16:14,048 - INFO - 🛑 Trigger publisher server stopped
+2025-09-04 19:16:14,048 - INFO - server closing
+2025-09-04 19:16:14,049 - INFO - server closed
+2025-09-04 19:17:43,530 - INFO - 🚀 Starting trigger publisher server on 0.0.0.0:8765
+2025-09-04 19:17:43,531 - INFO - server listening on 0.0.0.0:8765
+2025-09-04 19:17:43,531 - INFO - 📡 Trigger publisher listening on ws://0.0.0.0:8765
+2025-09-04 19:17:43,531 - INFO - 🔔 Waiting for training clients to subscribe...
+2025-09-04 19:17:55,607 - INFO - 🛑 Trigger publisher server stopped
+2025-09-04 19:17:55,608 - INFO - server closing
+2025-09-04 19:17:55,608 - INFO - server closed
+2025-09-04 19:29:05,560 - INFO - 🚀 Starting trigger publisher server on localhost:8766
+2025-09-04 19:29:05,655 - INFO - server listening on 127.0.0.1:8766
+2025-09-04 19:29:05,656 - INFO - server listening on [::1]:8766
+2025-09-04 19:29:05,656 - INFO - 📡 Trigger publisher listening on ws://localhost:8766
+2025-09-04 19:29:05,656 - INFO - 🔔 Waiting for training clients to subscribe...
+2025-09-04 19:29:06,061 - INFO - 🛑 Trigger publisher server stopped
+2025-09-04 19:29:06,061 - INFO - server closing
+2025-09-04 19:29:06,061 - INFO - server closed
+2025-09-04 19:29:06,062 - INFO - 🚀 Starting trigger publisher server on 127.0.0.1:8767
+2025-09-04 19:29:06,063 - INFO - server listening on 127.0.0.1:8767
+2025-09-04 19:29:06,063 - INFO - 📡 Trigger publisher listening on ws://127.0.0.1:8767
+2025-09-04 19:29:06,063 - INFO - 🔔 Waiting for training clients to subscribe...
+2025-09-04 19:29:06,563 - INFO - 🛑 Trigger publisher server stopped
+2025-09-04 19:29:06,563 - INFO - server closing
+2025-09-04 19:29:06,564 - INFO - server closed
