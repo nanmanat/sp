@@ -1,0 +1,2 @@
+2025-09-04 19:08:54,760 - WARNING - Training modules not available: No module named 'numpy'
+2025-09-04 19:08:54,760 - WARNING - Some dependencies may be missing. Training functionality will be limited.
