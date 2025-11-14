@@ -1,0 +1,31 @@
+# Object Detection Requirements
+# Install with: pip install -r requirements_detection.txt
+
+# Core requirements (REQUIRED)
+torch>=1.10.0
+torchvision>=0.14.0
+numpy>=1.19.0
+pillow>=8.0.0
+
+# EfficientDet models (OPTIONAL - for D0, D1, D2, D3)
+effdet>=0.2.4
+timm>=0.6.0
+
+# Transformer-based models (OPTIONAL - for DETR, Deformable DETR, RT-DETR)
+transformers>=4.20.0
+
+# Advanced models (OPTIONAL - for CenterNet and other mmdetection models)
+# Note: mmcv-full installation depends on your CUDA version
+# See: https://github.com/open-mmlab/mmcv#installation
+# mmcv-full>=1.4.0
+# mmdet>=2.24.0
+
+# Utilities
+tqdm>=4.60.0
+matplotlib>=3.3.0
+
+# For visualization (optional)
+opencv-python>=4.5.0
+
+# For COCO evaluation (optional)
+pycocotools>=2.0.2

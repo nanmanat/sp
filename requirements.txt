@@ -1,0 +1,26 @@
+# Core Requirements for Acne Image Grading Project
+# Install with: pip install -r requirements.txt
+
+# Deep Learning Framework
+torch>=1.10.0
+torchvision>=0.14.0
+
+# Image Processing
+Pillow>=8.0.0
+
+# Data Science
+numpy>=1.19.5,<2.0  # Must be <2.0 for scipy/sklearn compatibility
+scipy>=1.7.0
+scikit-learn>=0.24.0
+
+# GUI
+# tkinter is usually included with Python, no need to install
+
+# Model Libraries
+timm>=0.6.0  # For ConvNeXt, ViT, Swin models
+
+# Optional: For advanced training features
+# tensorboard>=2.8.0  # For training visualization
+# tqdm>=4.60.0  # For progress bars
+
+# Optional: For object detection (see requirements_detection.txt)
