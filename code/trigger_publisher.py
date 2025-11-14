@@ -216,19 +216,30 @@ class TrainingTriggerPublisher:
         """Start the WebSocket server."""
         logger.info(f"🚀 Starting trigger publisher server on {self.host}:{self.port}")
 
-        self.server = await websockets.serve(
-            self.handle_client,
-            self.host,
-            self.port,
-            ping_interval=20,
-            ping_timeout=10
-        )
+        try:
+            self.server = await websockets.serve(
+                self.handle_client,
+                self.host,
+                self.port,
+                ping_interval=20,
+                ping_timeout=10,
+                max_size=10_485_760,  # 10MB max message size
+                max_queue=64,         # Increase message queue
+                close_timeout=10      # Ensure clean closures
+            )
 
-        logger.info(f"📡 Trigger publisher listening on ws://{self.host}:{self.port}")
-        logger.info("🔔 Waiting for training clients to subscribe...")
+            logger.info(f"📡 Trigger publisher listening on ws://{self.host}:{self.port}")
+            logger.info("🔔 Waiting for training clients to subscribe...")
 
-        # Keep the server running
-        await self.server.wait_closed()
+            # Keep the server running
+            await self.server.wait_closed()
+        except OSError as e:
+            logger.error(f"❌ Failed to start server: {str(e)}")
+            logger.error("   This could be because the port is already in use or you don't have permission to bind to it.")
+            raise
+        except Exception as e:
+            logger.error(f"❌ Unexpected error starting server: {str(e)}")
+            raise
 
     def stop_server(self):
         """Stop the WebSocket server."""
