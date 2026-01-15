@@ -1,0 +1,2 @@
+model,fold,epoch,train_loss,val_loss,val_acc,precision,recall,f1_score,lr,elapsed
+resnet50,0,0,1.236789959735812,1.1364937362205219,0.4140386571719227,nan,0.30357537695649967,0.2472339006375151,0.001, 0 hr 02 min
