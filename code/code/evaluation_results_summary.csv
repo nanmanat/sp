@@ -1,0 +1,11 @@
+model_name,model_path,dataset_path,num_samples,QWK,BalAcc,Macro_F1,Macro_AUROC,Inference_ms
+vgg16_bn,E:/sp/code/code/saved_models/vgg16_bn_fold0/best_model.pth,E:/combined_dataset/test,215,0.8114518544502759,0.720164046479836,0.7271936066817105,0.9177977387394807,2.613035325678239
+resnet50,E:/sp/code/code/saved_models/resnet50_fold0/best_model.pth,E:/combined_dataset/test,215,0.8011204481792717,0.7067441330599225,0.7033105691364088,0.9101735035022113,1.9987267181740045
+efficientnet_v2_s,E:/sp/code/code/saved_models/efficientnet_v2_s_fold0/best_model.pth,E:/combined_dataset/test,215,0.8533387231247316,0.7534745955798586,0.739631863231146,0.9157788210175051,1.8545825566564287
+convnext_tiny,E:/sp/code/code/saved_models/convnext_tiny_fold0/best_model.pth,E:/combined_dataset/test,215,0.7989923648262608,0.7161995898838004,0.7156902749441368,0.902466959311903,1.7902118541439127
+densenet121,E:/sp/code/code/saved_models/densenet121_fold0/best_model.pth,E:/combined_dataset/test,215,0.8065950447208801,0.7210868079289132,0.7174158075190844,0.9256792745249626,2.265466064770029
+regnet_y_8gf,E:/sp/code/code/saved_models/regnet_y_8gf_fold0/best_model.pth,E:/combined_dataset/test,215,0.8169460673497548,0.6838687628161313,0.7178606106376093,0.9291796927820293,0.9014063647815159
+mobilenet_v3_large,E:/sp/code/code/saved_models/mobilenet_v3_large_fold0/best_model.pth,E:/combined_dataset/test,215,0.7615623667052587,0.7094611528822055,0.6906142244176556,0.8993677794860491,1.0989306968931827
+vit_small_patch16_224,E:/sp/code/code/saved_models/vit_small_patch16_224_fold0/best_model.pth,E:/combined_dataset/test,215,0.8713695202871751,0.7879756208703577,0.8037775716347144,0.9444883664425597,0.31182734492402636
+swin_tiny_patch4_window7_224,E:/sp/code/code/saved_models/swin_tiny_patch4_window7_224_fold0/best_model.pth,E:/combined_dataset/test,215,0.8411376473092963,0.7682216905901117,0.7566034307630339,0.9381825439787039,1.5698411727543944
+deit_small_patch16_224,E:/sp/code/code/saved_models/deit_small_patch16_224_fold0/best_model.pth,E:/combined_dataset/test,215,0.8693906658566863,0.7903736614262931,0.7959744206237895,0.9431883474411353,0.13189735064595381
