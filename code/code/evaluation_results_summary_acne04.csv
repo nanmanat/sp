@@ -1,0 +1,11 @@
+model_name,model_path,dataset_path,num_samples,QWK,BalAcc,Macro_F1,Macro_AUROC,Inference_ms
+vgg16_bn,E:/sp/code/saved_models-1/vgg16_bn_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.2669362992922144,0.3352272727272727,0.14262820512820512,0.6659174159174159,51.18985176086426
+resnet50,E:/sp/code/saved_models-1/resnet50_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.011571841851494624,0.375,0.16071428571428573,0.5672348484848484,33.9372444152832
+efficientnet_v2_s,E:/sp/code/saved_models-1/efficientnet_v2_s_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.04426559356136828,0.375,0.16545454545454547,0.6008054445554445,24.80266571044922
+convnext_tiny,E:/sp/code/saved_models-1/convnext_tiny_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.5439469320066335,0.5303030303030303,0.3927350427350427,0.738854895104895,30.435237884521484
+densenet121,E:/sp/code/saved_models-1/densenet121_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.17974322396576325,0.46401515151515155,0.312962962962963,0.5366820679320679,49.97788429260254
+regnet_y_8gf,E:/sp/code/saved_models-1/regnet_y_8gf_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.0,0.25,0.16216216216216217,0.6675199800199801,70.63504219055176
+mobilenet_v3_large,E:/sp/code/saved_models-1/mobilenet_v3_large_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.06902815622161673,0.3390151515151515,0.1775974025974026,0.5031947219447219,21.743927001953125
+vit_small_patch16_224,E:/sp/code/saved_models-1/vit_small_patch16_224_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.3553008595988538,0.3768939393939394,0.19581686429512518,0.6547410922410923,12.794322967529297
+swin_tiny_patch4_window7_224,E:/sp/code/saved_models-1/swin_tiny_patch4_window7_224_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.32835820895522394,0.44128787878787884,0.2915969899665552,0.7076257076257076,1.6235923767089844
+deit_small_patch16_224,E:/sp/code/saved_models-1/deit_small_patch16_224_fold0/best_model.pth,E:/AcneSCU_classification_dataset/test,25,0.11147011308562205,0.3162878787878788,0.13411261940673705,0.6733370795870796,0.6108188629150391
